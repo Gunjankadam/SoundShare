@@ -1,6 +1,6 @@
-# FriendlyBros
+# SoundShare
 
-**FriendlyBros** is a full-stack web application built using **Node.js**, **Express**, **Passport.js**, and **EJS** templates. It features user authentication, media management, QR code handling, and integration with services like Firebase and Supabase.
+**SoundShare** is a voice-based social platform where users can record, upload, and share audio messages easily. The platform supports secure user authentication and allows recordings to be stored and accessed via personalized QR codes. Users can choose to upload audio from local files or cloud sources like Supabase. With features like password recovery, audio compression, and user-friendly design, SoundShare makes audio sharing simple and efficient.
 
 ---
 
@@ -60,15 +60,6 @@ friendlyBros/
 
 ---
 
-## 📸 Screenshots
-
-You can add screenshots of:
-- Login Page (`views/login.ejs`)
-- Audio Recorder (`views/record.ejs`)
-- QR Code Interaction
-
----
-
 ## 🛠️ Technologies Used
 
 - Node.js + Express
@@ -80,20 +71,15 @@ You can add screenshots of:
 
 ---
 
-## 🧪 Testing
+## 🧪 Deployed Website
 
-To be added. You can use tools like Postman for API testing or add Mocha/Chai for unit testing.
-
----
-
-## 📄 License
-
-This project is licensed under the [MIT License](LICENSE).
+https://friendlybro.onrender.com/
 
 ---
 
-## 🙋‍♂️ Authors
+## 📸 Screenshots
 
-- [Your Name](https://github.com/your-username)
-
-Feel free to contribute, open issues, or suggest improvements!
+You can add screenshots of:
+- Login Page (`views/login.ejs`)
+- Audio Recorder (`views/record.ejs`)
+- QR Code Interaction
