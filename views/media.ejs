@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title><%= media.filename %></title>
+  <style>
+    :root {
+      --spotify-green: #1db954;
+      --dark-bg: #000000;
+      --glass-bg: rgba(255, 255, 255, 0.05);
+      --text-light: #e0e0e0;
+    }
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      text-align: center;
+      padding: 40px 20px;
+      background: var(--dark-bg);
+      background-size: cover;
+      background-repeat: no-repeat;
+      background-position: center;
+      background-attachment: fixed;
+      color: rgb(255, 245, 245);
+    }
+
+    .music-player {
+      max-width: 400px;
+      margin: auto;
+      padding: 30px;
+      border-radius: 20px;
+      backdrop-filter: blur(20px);
+      background: rgba(97, 90, 90, 0.4);
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.5);
+    }
+
+    .cd-wrapper {
+      width: 250px;
+      height: 250px;
+      border-radius: 50%;
+      overflow: hidden;
+      margin: 0 auto 20px;
+      position: relative;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+    }
+
+    .cd-wrapper img {
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      animation: spin 6s linear infinite;
+      animation-play-state: paused;
+      transform-origin: center center;
+    }
+
+    @keyframes spin {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+
+    h1 {
+      font-size: 24px;
+      margin: 10px 0 5px;
+      font-weight: 600;
+    }
+
+    p {
+      font-size: 16px;
+      font-style: italic;
+      opacity: 0.85;
+    }
+
+    audio {
+      width: 100%;
+      margin-top: 15px;
+    }
+
+    #loadingIndicator {
+      font-style: italic;
+      margin-top: 10px;
+    }
+  </style>
+</head>
+<body>
+  <div class="music-player">
+    <div class="cd-wrapper">
+      <img id="cdImage" src="https://res.cloudinary.com/dpzvohwx6/image/upload/v1750179382/cd-in-black-and-white-color-vector-removebg-preview_1_qugmau.png" alt="Album Art">
+    </div>
+
+    <h1><%= media.uploadedBy || 'Friend' %>’s Message</h1>
+    <p><%= media.message || "Enjoy this media!" %></p>
+
+    <audio controls id="audioPreview"></audio>
+    <div id="loadingIndicator">Loading...</div>
+    <div id="mediaPreview" style="display: none;"></div>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', async () => {
+      const audioPreview = document.getElementById('audioPreview');
+      const loadingIndicator = document.getElementById('loadingIndicator');
+      const mediaPreview = document.getElementById('mediaPreview');
+      const audioUrl = "<%= media.fileUrl %>";
+      const hiddenAudioUrl = "<%= hiddenAudioUrl %>";
+      const cdImage = document.getElementById('cdImage');
+
+      try {
+        const [audioResponse, moodResponse] = await Promise.all([
+          fetch(audioUrl),
+          fetch(hiddenAudioUrl)
+        ]);
+
+        if (!audioResponse.ok || !moodResponse.ok) throw new Error("Failed to fetch audio files.");
+
+        const [audioBlob, moodBlob] = await Promise.all([
+          audioResponse.blob(),
+          moodResponse.blob()
+        ]);
+
+        const [audioBuffer, moodBuffer] = await Promise.all([
+          new AudioContext().decodeAudioData(await audioBlob.arrayBuffer()),
+          new AudioContext().decodeAudioData(await moodBlob.arrayBuffer())
+        ]);
+
+        const mixAudio = async (main, mood) => {
+          const context = new OfflineAudioContext(2, main.sampleRate * main.duration, main.sampleRate);
+          const source1 = context.createBufferSource();
+          const source2 = context.createBufferSource();
+          const gain1 = context.createGain();
+          const gain2 = context.createGain();
+
+          source1.buffer = main;
+          source2.buffer = mood;
+          gain1.gain.value = 1.0;
+          gain2.gain.value = 0.15;
+
+          source1.connect(gain1).connect(context.destination);
+          source2.connect(gain2).connect(context.destination);
+
+          source1.start();
+          source2.start();
+
+          return await context.startRendering();
+        };
+
+        const loopAudio = (buffer, targetDuration) => {
+          const ctx = new AudioContext();
+          const looped = ctx.createBuffer(
+            buffer.numberOfChannels,
+            buffer.length * Math.ceil(targetDuration / buffer.duration),
+            buffer.sampleRate
+          );
+
+          for (let i = 0; i < looped.numberOfChannels; i++) {
+            const channel = looped.getChannelData(i);
+            const source = buffer.getChannelData(i);
+            for (let j = 0; j < channel.length; j++) {
+              channel[j] = source[j % source.length];
+            }
+          }
+
+          return looped;
+        };
+
+        let finalBuffer;
+        if (audioBuffer.duration > moodBuffer.duration) {
+          const loopedMood = loopAudio(moodBuffer, audioBuffer.duration);
+          finalBuffer = await mixAudio(audioBuffer, loopedMood);
+        } else {
+          finalBuffer = await mixAudio(audioBuffer, moodBuffer);
+        }
+
+        const wavBlob = await bufferToWave(finalBuffer);
+        audioPreview.src = URL.createObjectURL(wavBlob);
+        audioPreview.pause();
+        audioPreview.currentTime = 0;
+        loadingIndicator.style.display = "none";
+        mediaPreview.style.display = "block";
+
+        // Spinning effect control
+        audioPreview.addEventListener('play', () => {
+          cdImage.style.animationPlayState = 'running';
+        });
+        audioPreview.addEventListener('pause', () => {
+          cdImage.style.animationPlayState = 'paused';
+        });
+        audioPreview.addEventListener('ended', () => {
+          cdImage.style.animationPlayState = 'paused';
+        });
+
+      } catch (err) {
+        console.error(err);
+        alert("Error mixing audio.");
+      }
+    });
+
+    function bufferToWave(buffer) {
+      const numChannels = buffer.numberOfChannels;
+      const sampleRate = buffer.sampleRate;
+      const numFrames = buffer.length;
+      const bitsPerSample = 16;
+      const blockAlign = numChannels * bitsPerSample / 8;
+      const byteRate = sampleRate * blockAlign;
+      const dataSize = numFrames * blockAlign;
+
+      const bufferLength = 44 + dataSize;
+      const arrayBuffer = new ArrayBuffer(bufferLength);
+      const view = new DataView(arrayBuffer);
+
+      let offset = 0;
+
+      function writeString(str) {
+        for (let i = 0; i < str.length; i++) {
+          view.setUint8(offset++, str.charCodeAt(i));
+        }
+      }
+
+      writeString('RIFF');
+      view.setUint32(offset, 36 + dataSize, true); offset += 4;
+      writeString('WAVE');
+      writeString('fmt ');
+      view.setUint32(offset, 16, true); offset += 4;
+      view.setUint16(offset, 1, true); offset += 2; // PCM
+      view.setUint16(offset, numChannels, true); offset += 2;
+      view.setUint32(offset, sampleRate, true); offset += 4;
+      view.setUint32(offset, byteRate, true); offset += 4;
+      view.setUint16(offset, blockAlign, true); offset += 2;
+      view.setUint16(offset, bitsPerSample, true); offset += 2;
+      writeString('data');
+      view.setUint32(offset, dataSize, true); offset += 4;
+
+      for (let i = 0; i < numFrames; i++) {
+        for (let ch = 0; ch < numChannels; ch++) {
+          const sample = buffer.getChannelData(ch)[i];
+          const s = Math.max(-1, Math.min(1, sample));
+          view.setInt16(offset, s * 0x7FFF, true);
+          offset += 2;
+        }
+      }
+
+      return new Blob([arrayBuffer], { type: 'audio/wav' });
+    }
+  </script>
+</body>
+</html>

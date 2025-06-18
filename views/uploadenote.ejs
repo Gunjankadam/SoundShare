@@ -1,0 +1,183 @@
+<!doctype html>
+<html lang="en" class="h-100">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>My Uploads</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    body {
+      background: url('https://res.cloudinary.com/dsjt220g8/image/upload/v1732522074/websitee_lffl5s.jpg') no-repeat center center fixed;
+      background-size: cover;
+      font-family: 'Segoe UI', sans-serif;
+      min-height: 100vh;
+      margin: 0;
+      padding: 0;
+    }
+
+    .main-wrapper {
+      padding: 3rem 1rem;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+    }
+
+    .form-container {
+      backdrop-filter: blur(12px);
+      background-color: rgba(255, 255, 255, 0.15);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      padding: 2rem;
+      border-radius: 16px;
+      width: 100%;
+      max-width: 700px;
+      color: #000;
+    }
+
+    .form-container h1 {
+      font-weight: 700;
+      text-shadow: 0 1px 2px rgba(255,255,255,0.5);
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+
+    .card {
+      background-color: rgba(255, 255, 255, 0.9);
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      margin-bottom: 20px;
+      transition: all 0.3s ease;
+    }
+
+    .card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+    }
+
+    .card-body {
+      color: black;
+    }
+
+    .btn-custom {
+      background-color: black;
+      color: white;
+      border-radius: 6px;
+      font-weight: 500;
+      width: 100%;
+    }
+
+    .btn-custom:hover {
+      background-color: #333;
+      color: white;
+    }
+
+    .username {
+      position: fixed;
+      top: 1rem;
+      left: 1rem;
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: white;
+      text-shadow: 1px 1px 3px black;
+      z-index: 1000;
+    }
+
+    .img-fluid {
+      max-width: 180px;
+      margin-top: 10px;
+    }
+
+    @media (max-width: 576px) {
+      .form-container {
+        padding: 1.5rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="username">Hello, <span id="username"><%= name %></span></div>
+
+  <div class="main-wrapper">
+    <div class="form-container">
+      <h1> Upload History</h1>
+
+      <% if (mediaEntries.length === 0) { %>
+        <p class="text-center text-muted">No notes created yet.</p>
+      <% } else { %>
+        <% mediaEntries.forEach(media => { %>
+          <div class="card">
+            <div class="card-body">
+              <h5 class="fw-bold">Uploaded By: <%= media.uploadedBy %></h5>
+              <p><strong>Message:</strong> <%= media.message %></p>
+
+              <% if (media.mood === 'A') { %>
+                <p><strong>BGM:</strong> Main agar kahoon.mp3</p>
+              <% } else if (media.mood === 'B') { %>
+                <p><strong>BGM:</strong> Tera yaar hoon mai.mp3</p>
+              <% } else if (media.mood === 'C') { %>
+                <p><strong>BGM:</strong> Tere jaisa yaar kaha.mp3</p>
+              <% } else if (media.mood === 'D') { %>
+                <p><strong>BGM:</strong> Tu hai toh.mp3</p>
+              <% } else if (media.mood === 'E') { %>
+                <p><strong>BGM:</strong> Tu hi yaar mera.mp3</p>
+              <% } else if (media.mood === 'F') { %>
+                <p><strong>BGM:</strong> Old song mashup.mp3</p>
+              <% } else if (media.mood === 'G') { %>
+                <p><strong>BGM:</strong> A thousand years.mp3</p>
+              <% } else if (media.mood === 'H') { %>
+                <p><strong>BGM:</strong> Tumse mil ke.mp3</p>
+              <% } else if (media.mood === 'I') { %>
+                <p><strong>BGM:</strong> Zara Zara.mp3</p>
+              <% } %>
+
+              <div class="text-center">
+                <img src="<%= media.qrlocUrl %>" alt="QR Code" class="img-fluid" />
+              </div>
+
+              <a href="#" class="btn btn-custom mt-3" onclick="downloadFromFirebase('<%= media.qrlocUrl %>')">Download QR Code</a>
+            </div>
+          </div>
+        <% }) %>
+      <% } %>
+    </div>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const name = "<%= name %>";
+      if (name && name !== "guest") {
+        sessionStorage.setItem("username", name);
+      }
+
+      const storedName = sessionStorage.getItem("username");
+      if (storedName) {
+        document.getElementById("username").textContent = storedName;
+      }
+    });
+
+    function downloadFromFirebase(url) {
+      if (!url) return alert('Invalid download URL.');
+
+      const filename = url.substring(url.lastIndexOf("/") + 1).split("?")[0];
+      const xhr = new XMLHttpRequest();
+      xhr.responseType = 'blob';
+
+      xhr.onload = function () {
+        const a = document.createElement('a');
+        a.href = window.URL.createObjectURL(xhr.response);
+        a.download = filename;
+        a.style.display = 'none';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+      };
+
+      xhr.onerror = () => alert('Download failed.');
+      xhr.open('GET', url);
+      xhr.send();
+    }
+  </script>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

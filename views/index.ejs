@@ -1,0 +1,170 @@
+<!doctype html>
+<html lang="en" class="h-100">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>SoundShare - Voice Notes</title>
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <style>
+      body, html {
+        height: 100%;
+        font-family: 'Poppins', sans-serif;
+        background-image: url('https://res.cloudinary.com/dsjt220g8/image/upload/v1732522074/websitee_lffl5s.jpg');
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+        background-attachment: fixed;
+      }
+
+      .overlay {
+        background-color: rgba(0, 0, 0, 0.6);
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 0;
+      }
+
+      .center-content {
+        z-index: 1;
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        padding: 2rem;
+      }
+
+      .glass-box {
+        background: rgba(255, 255, 255, 0.12);
+        backdrop-filter: blur(20px);
+        border-radius: 16px;
+        padding: 3rem 2rem;
+        width: 100%;
+        max-width: 450px;
+        text-align: center;
+        color: #fff;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+        animation: fadeIn 1s ease-out;
+      }
+
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(-10px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      h1 {
+        font-weight: 700;
+        margin-bottom: 1rem;
+        font-size: 2.3rem;
+      }
+
+      .btn-custom {
+        font-size: 1.1rem;
+        padding: 0.75rem 1.5rem;
+        width: 100%;
+        border-radius: 12px;
+        margin-top: 1rem;
+        font-weight: 600;
+        transition: 0.3s ease-in-out;
+      }
+
+      .btn-custom:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(255, 255, 255, 0.3);
+      }
+
+      .logout-button {
+        position: absolute;
+        top: 1rem;
+        right: 1rem;
+        z-index: 2;
+      }
+
+      .username {
+        position: absolute;
+        top: 1rem;
+        left: 1rem;
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: white;
+        z-index: 2;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="overlay"></div>
+
+    <div class="username"> Hello, <span id="username"><%= name %></span></div>
+    <form action="/logout?_method=DELETE" method="POST" class="logout-button">
+      <button class="btn btn-dark text-white">Logout</button>
+    </form>
+
+    <div class="container center-content">
+      <div class="glass-box">
+        <h1>Welcome to <span class="text-warning">SoundShare</span></h1>
+        <p class="lead">Send voice notes with mood-perfect background music.</p>
+
+        <button 
+          class="btn btn-light text-dark btn-custom"
+          onclick="redirectToUpload()"
+        >
+          🎙️ Record Voice Note
+        </button>
+
+        <button 
+          class="btn btn-outline-light btn-custom"
+          onclick="redirectToUploadNotes()"
+        >
+          🎵 Your Voice Notes
+        </button>
+      </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+      function redirectToUpload() {
+        const name = document.getElementById('username').textContent;
+        const form = document.createElement('form');
+        form.method = 'GET';
+        form.action = '/record';
+        const nameInput = document.createElement('input');
+        nameInput.type = 'hidden';
+        nameInput.name = 'name';
+        nameInput.value = name;
+        form.appendChild(nameInput);
+        document.body.appendChild(form);
+        form.submit();
+      }
+
+      function redirectToUploadNotes() {
+        const name = document.getElementById('username').textContent;
+        const form = document.createElement('form');
+        form.method = 'GET';
+        form.action = '/uploadnote';
+        const nameInput = document.createElement('input');
+        nameInput.type = 'hidden';
+        nameInput.name = 'name';
+        nameInput.value = name;
+        form.appendChild(nameInput);
+        document.body.appendChild(form);
+        form.submit();
+      }
+    </script>
+  </body>
+</html>
