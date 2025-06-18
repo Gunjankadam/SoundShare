@@ -80,6 +80,9 @@ https://friendlybro.onrender.com/
 ## 📸 Screenshots
 
 You can add screenshots of:
-- Login Page (`views/login.ejs`)
-- Audio Recorder (`views/record.ejs`)
+- Login Page 
+  ![Image 1](https://github.com/Gunjankadam/SoundShare/blob/main/login.jpg)
+- Homepage
+  ![Image 2](https://github.com/Gunjankadam/SoundShare/blob/main/homepage.jpg)
 - QR Code Interaction
+  ![Image 3](https://github.com/Gunjankadam/SoundShare/blob/main/note.jpg)
