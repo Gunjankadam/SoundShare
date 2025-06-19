@@ -79,7 +79,6 @@ https://friendlybro.onrender.com/
 
 ## 📸 Screenshots
 
-You can add screenshots of:
 - Login Page 
   ![Image 1](https://github.com/Gunjankadam/SoundShare/blob/main/login.jpg)
 - Homepage
