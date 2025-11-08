@@ -486,7 +486,7 @@ const UploadUser = asyncHandler(async (req, res) => {
         const fileUrl = signedAudioUrlData?.signedUrl;
 
         // Generate QR Code
-        const useUrl = `${process.env.NGROK_URL}/media/${tempId}`;
+        const useUrl = `https://sound-share.vercel.app/media/${tempId}`;
         const qrImageDataUrl = await generateQRCode(useUrl);
 
         // Convert base64 image to buffer
