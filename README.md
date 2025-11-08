@@ -35,8 +35,8 @@ friendlyBros/
 
 1. **Clone the repository**
    ```bash
-   git clone https://github.com/your-username/friendlyBros.git
-   cd friendlyBros
+   git clone https://github.com/Gunjankadam/SoundShare.git
+   cd SoundShare
    ```
 
 2. **Install dependencies**
@@ -75,7 +75,7 @@ friendlyBros/
 
 ## 🧪 Deployed Website
 
-https://friendlybro.onrender.com/
+https://sound-share.vercel.app/
 
 ---
 
