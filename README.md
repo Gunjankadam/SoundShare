@@ -47,10 +47,12 @@ friendlyBros/
 3. **Setup environment variables**
    Create a `.env` file in the root and add:
    ```env
-   FIREBASE_API_KEY=your_firebase_api_key
+   MONGO_URL=your_mongodb_connectionstring
    SUPABASE_URL=your_supabase_url
    SUPABASE_KEY=your_supabase_key
    SESSION_SECRET=your_session_secret
+   GMAIL_USER=your_gmail
+   GMAIL_PASS=your_password(encrypted,obtaned through app-password)
    ```
 
 4. **Run the app**
