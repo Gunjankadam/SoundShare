@@ -1,0 +1,658 @@
+<!doctype html>
+<html lang="en" class="h-100">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="Mark Otto, Jacob Thornton, and Bootstrap contributors">
+    <meta name="generator" content="Hugo 0.98.0">
+    <title>Upload</title>
+    <link 
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" 
+      rel="stylesheet" 
+      integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" 
+      crossorigin="anonymous"
+    >
+      <!-- Bootstrap -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet">
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet">
+
+  <style>
+    body, html {
+      height: 100%;
+      margin: 0;
+      font-family: 'Poppins', sans-serif;
+      background: url('https://res.cloudinary.com/dsjt220g8/image/upload/v1732522074/websitee_lffl5s.jpg') no-repeat center center fixed;
+      background-size: cover;
+      overflow-x: hidden;
+    }
+
+    .center-content {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+    }
+
+    .form-container {
+      background: rgba(255, 255, 255, 0.15);
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      border-radius: 1rem;
+      padding: 2rem;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25);
+      width: 100%;
+      max-width: 500px;
+      animation: slideIn 1s ease-out forwards;
+      transform: translateY(30px);
+      opacity: 0;
+    }
+
+    @keyframes slideIn {
+      to {
+        transform: translateY(0);
+        opacity: 1;
+      }
+    }
+
+    h1 {
+      font-size: 2rem;
+      margin-bottom: 1rem;
+      text-align: center;
+      color: #fff;
+    }
+
+    .form-container input,
+    .form-container textarea,
+    .form-container button,
+    .form-container select {
+      width: 100%;
+      margin-bottom: 1rem;
+      padding: 0.75rem;
+      font-size: 1rem;
+      border-radius: 10px;
+      border: none;
+      outline: none;
+      background: rgba(255, 255, 255, 0.85);
+    }
+
+    .form-container input::placeholder,
+    .form-container textarea::placeholder {
+      color: #555;
+    }
+
+    .form-container button {
+      background-color: #000;
+      color: #fff;
+      border: none;
+      transition: all 0.3s ease;
+      position: relative;
+    }
+
+    .form-container button:hover {
+      background-color: #222;
+      transform: scale(1.02);
+    }
+
+    .logout-button {
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+      color: white;
+      font-weight: 500;
+    }
+
+    .username {
+      position: absolute;
+      top: 1rem;
+      left: 1rem;
+      font-size: 1.25rem;
+      color: white;
+      font-weight: bold;
+    }
+
+    #loading {
+      color: #fff;
+      font-weight: bold;
+      font-size: 1rem;
+      margin-bottom: 1rem;
+    }
+
+    .media-preview audio {
+      width: 100%;
+    }
+
+    #uploadSpinner {
+      display: none;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
+
+    #qrCanvas {
+      margin-top: 1rem;
+    }
+
+    #downloadButton, #doneButton {
+      background-color: #000;
+      color: #fff;
+      border-radius: 10px;
+      border: none;
+      padding: 0.6rem 1rem;
+      transition: all 0.3s ease;
+    }
+
+    #downloadButton:hover,
+    #doneButton:hover {
+      background-color: #333;
+      transform: scale(1.05);
+    }
+    h1{
+      color: black;
+    }
+  </style>
+  </head>
+  <body class="d-flex h-100 text-center text-white bg-white">
+    <div class="container d-flex w-100 h-100 p-3 mx-auto flex-column center-content">
+      <div class="username">𝑯𝒆𝒍𝒍𝒐 <span id="username"><%= name %></span></div>
+      <div class="form-container">
+        <h1>𝘾𝙧𝙚𝙖𝙩𝙚 𝙉𝙤𝙩𝙚</h1>
+        <input type="text" id="uploadedBy" placeholder="Your Name" />
+        <textarea id="message" placeholder="Message"></textarea>
+        <select id="mood" class="form-control mb-3">
+          <option value="" disabled selected>Select BGM</option>
+          <option value="A">Main agar kahoon.mp3</option>
+          <option value="B">Tera yaar hoon mai.mp3</option>
+          <option value="C">Tere jaisa yaar kaha.mp3</option>
+          <option value="D">Tu hai toh.mp3</option>
+          <option value="E">Tu hi yaar mera.mp3</option>
+          <option value="F">Old song mashup.mp3</option>
+          <option value="G">thousand years.mp3</option>
+          <option value="H">Tumse mil ke.mp3</option>
+          <option value="I">Zara Zara.mp3</option>
+        </select>
+        <div id="loading" style="display:none;  
+      color: rgb(3, 3, 3); 
+      padding: 10px 20px; 
+      border-radius: 5px; 
+      font-size: 16px; 
+      font-weight: bold; 
+      margin-bottom: 1rem;">
+    Mixing Audio, Please Wait...
+  </div>
+
+        <div id="mediaPreview" class="media-preview" style="display: none;">
+          <audio id="audioPreview" controls></audio>
+        </div>
+        
+        <!-- Removed file input -->
+        <button id="uploadButton" style="position: relative; display: flex; justify-content: center; align-items: center; padding: 0.75rem;">
+          Upload
+          <div id="uploadSpinner" style="display: none; position: absolute; left: 50%; transform: translateX(-50%);">
+            <div class="spinner-border text-light" role="status">
+              <span class="visually-hidden">Loading...</span>
+            </div>
+          </div>
+        </button>
+        
+        <div id="qrCanvas" class="mt-4" style="display:none;"></div>
+        <button id="downloadButton" style="display:none;" class="mt-2">Download QR</button>
+        <button id="doneButton" style="display:none;" class="mt-2">Done</button>
+    </div>
+  </div>
+
+    <script>
+      document.addEventListener('DOMContentLoaded', () => {
+  const name = "<%= name %>"; // Server-rendered value
+  if (name && name !== "guest") {
+    sessionStorage.setItem("username", name);
+  }
+
+  const storedName = sessionStorage.getItem("username");
+  if (storedName) {
+    const usernameElement = document.getElementById("username");
+    usernameElement.textContent = storedName;
+  }
+
+  const moodSelect = document.getElementById("mood");
+  const mediaPreview = document.getElementById("mediaPreview");
+  const audioPreview = document.getElementById("audioPreview");
+
+  let audioContext = new (window.AudioContext || window.webkitAudioContext)();
+  moodSelect.selectedIndex = 0;
+  moodSelect.addEventListener("change", async (event) => {
+    const loadingIndicator = document.getElementById("loading");
+    loadingIndicator.style.display = "block"; // Show loading indicator
+  // Hide the old audio preview and clear the src
+  audioPreview.src = '';
+  mediaPreview.style.display = 'none'; // Hide the previous preview
+
+    const selectedMood = event.target.value;
+    let moodAudioUrl = ` `;
+
+        const oneUrl = `https://firebasestorage.googleapis.com/v0/b/alumini8-3fd16.appspot.com/o/my-storage%2FMain%20agar%20kahoon.mp3?alt=media&token=7b5fff8d-8cca-4702-8c14-d62d85c1c25b`;
+        const twoUrl = `https://firebasestorage.googleapis.com/v0/b/alumini8-3fd16.appspot.com/o/my-storage%2FTera%20yaar%20hoon%20mai.mp3?alt=media&token=be61d93b-14f4-4d51-a909-101cfa2b5a20`;
+        const threeUrl = `https://firebasestorage.googleapis.com/v0/b/alumini8-3fd16.appspot.com/o/my-storage%2FTere%20jaisa%20yaar%20kaha.mp3?alt=media&token=f6f745fb-b40a-4f19-8ba2-487fd5d28f80`;
+        const fourUrl =`https://firebasestorage.googleapis.com/v0/b/alumini8-3fd16.appspot.com/o/my-storage%2FTu%20hai%20toh.mp3?alt=media&token=658a6e88-d3fc-403e-9672-fb967c3a1fed`;
+        const fiveUrl=`https://firebasestorage.googleapis.com/v0/b/alumini8-3fd16.appspot.com/o/my-storage%2FTu%20hi%20yaar%20mera.mp3?alt=media&token=a51ae28b-6462-4f01-bf9d-1e8069ceec05`;
+        const sixUrl=`https://firebasestorage.googleapis.com/v0/b/alumini8-3fd16.appspot.com/o/my-storage%2Fold%20song%20mashup.mp3?alt=media&token=f751cf76-11af-4cf7-a587-8fa987da5834`;
+        const sevenUrl=`https://firebasestorage.googleapis.com/v0/b/alumini8-3fd16.appspot.com/o/my-storage%2Fthousand%20years.mp3?alt=media&token=614aed54-0b1f-49ee-b9b9-0744dd18bc37`;
+        const eightUrl=`https://firebasestorage.googleapis.com/v0/b/alumini8-3fd16.appspot.com/o/my-storage%2Ftumse%20mil%20ke.mp3?alt=media&token=c6f6389c-4c8a-42a8-8b3c-3f5bddf03e90`;
+        const nineUrl=`https://firebasestorage.googleapis.com/v0/b/alumini8-3fd16.appspot.com/o/my-storage%2Fzara%20zara.mp3?alt=media&token=5f312d51-48bb-437a-8938-e4718f44c404`;
+        let hiddenAudioUrl;
+        // Determine the hidden audio URL based on mood
+        if(selectedMood === "A"){
+            hiddenAudioUrl =  oneUrl;
+        }else if(selectedMood === "B"){
+            hiddenAudioUrl =  twoUrl;
+        }else if(selectedMood === "C"){
+            hiddenAudioUrl =  threeUrl;
+        }else if(selectedMood === "D"){
+            hiddenAudioUrl =  fourUrl;
+        }else if(selectedMood === "E"){
+            hiddenAudioUrl =  fiveUrl;
+        }else if(selectedMood === "F"){
+            hiddenAudioUrl =  sixUrl;
+        }else if(selectedMood === "G"){
+            hiddenAudioUrl =  sevenUrl;
+        }else if(selectedMood === "H"){
+            hiddenAudioUrl =  eightUrl;
+        }else{
+            hiddenAudioUrl =  nineUrl;
+        }
+
+    if (selectedMood) {
+      const audioUrl = new URLSearchParams(window.location.search).get("audioUrl");
+
+      if (!audioUrl) {
+        alert("Main audio URL is required!");
+        return;
+      }
+      console.log(audioUrl);
+      console.log(hiddenAudioUrl);
+
+      try {
+        // Request to fetch both the main audio and the mood audio
+        const [audioResponse, moodResponse] = await Promise.all([
+          fetch(audioUrl),
+          fetch(hiddenAudioUrl),
+        ]);
+
+        if (!audioResponse.ok || !moodResponse.ok) {
+          throw new Error("Failed to fetch audio files.");
+        }
+
+        const [audioBlob, moodBlob] = await Promise.all([
+          audioResponse.blob(),
+          moodResponse.blob(),
+        ]);
+
+        const [audioArrayBuffer, moodArrayBuffer] = await Promise.all([
+          audioBlob.arrayBuffer(),
+          moodBlob.arrayBuffer(),
+        ]);
+
+        // Decode the audio files into audio buffers
+        const [audioBuffer, moodBuffer] = await Promise.all([
+          audioContext.decodeAudioData(audioArrayBuffer),
+          audioContext.decodeAudioData(moodArrayBuffer),
+        ]);
+
+        // Create two audio buffers and set their playback rates
+        const audioSource = audioContext.createBufferSource();
+        const moodSource = audioContext.createBufferSource();
+
+        audioSource.buffer = audioBuffer;
+        moodSource.buffer = moodBuffer;
+
+        // Create gain nodes for volume control
+        const audioGainNode = audioContext.createGain();
+        const moodGainNode = audioContext.createGain();
+
+        audioGainNode.gain.value = 1.0; // 100% volume for main audio
+        moodGainNode.gain.value = 0.15; // 20% volume for mood audio
+        // Connect the sources to the gain nodes and the context destination
+        audioSource.connect(audioGainNode);
+        moodSource.connect(moodGainNode);
+        
+
+        audioGainNode.connect(audioContext.destination);
+        moodGainNode.connect(audioContext.destination);
+
+        // Check if main audio is longer than mood audio
+        if (audioBuffer.duration > moodBuffer.duration) {
+    // Initialize OfflineAudioContext before creating sources
+    const offlineContext = new OfflineAudioContext(2, audioBuffer.sampleRate * audioBuffer.duration, audioBuffer.sampleRate);
+
+    // Loop the mood audio until its length matches the main audio
+    const loopedMoodBuffer = await loopAudio(moodBuffer, audioBuffer.duration);
+    
+    // Create and configure offline sources
+    const offlineAudioSource = offlineContext.createBufferSource();
+    const offlineMoodSource = offlineContext.createBufferSource();
+    
+    offlineAudioSource.buffer = audioBuffer;
+    offlineMoodSource.buffer = loopedMoodBuffer;
+
+    // Create gain nodes for volume control
+    const offlineAudioGainNode = offlineContext.createGain();
+    const offlineMoodGainNode = offlineContext.createGain();
+
+    offlineAudioGainNode.gain.value = 1.0; // Full volume for main audio
+    offlineMoodGainNode.gain.value = 0.15; // Reduced volume for mood audio
+
+    // Connect sources to gain nodes
+    offlineAudioSource.connect(offlineAudioGainNode);
+    offlineMoodSource.connect(offlineMoodGainNode);
+
+    // Connect gain nodes to the offline context destination
+    offlineAudioGainNode.connect(offlineContext.destination);
+    offlineMoodGainNode.connect(offlineContext.destination);
+
+    // Start offline sources for rendering
+    offlineAudioSource.start();
+    offlineMoodSource.start();
+
+    // Render the mixed audio in the offline context
+    const mixedAudioBuffer = await offlineContext.startRendering();
+
+    // Convert the mixed audio buffer into a blob
+    const mixedAudioBlob = await bufferToWave(mixedAudioBuffer);
+    const mixedAudioUrl = URL.createObjectURL(mixedAudioBlob);
+
+    // Set the mixed audio URL to the audio preview element
+    audioPreview.src = mixedAudioUrl;
+    audioPreview.pause(); // Explicitly pause the audio to ensure it doesn't play automatically
+    audioPreview.currentTime = 0;
+
+    // Update UI
+    loadingIndicator.style.display = "none"; // Hide loading indicator
+    mediaPreview.style.display = "block"; // Show the audio preview
+
+        } else {
+          const NewContext = new OfflineAudioContext(2, audioBuffer.sampleRate * audioBuffer.duration, audioBuffer.sampleRate);
+          
+          // Create and configure offline sources
+    const NewAudioSource = NewContext.createBufferSource();
+    const NewMoodSource = NewContext.createBufferSource();
+    
+    NewAudioSource.buffer = audioBuffer;
+    NewMoodSource.buffer = moodBuffer;
+
+    // Create gain nodes for volume control
+    const NewAudioGainNode = NewContext.createGain();
+    const NewMoodGainNode = NewContext.createGain();
+
+    NewAudioGainNode.gain.value = 1.0; // Full volume for main audio
+    NewMoodGainNode.gain.value = 0.15; // Reduced volume for mood audio
+
+    // Connect sources to gain nodes
+    NewAudioSource.connect(NewAudioGainNode);
+    NewMoodSource.connect(NewMoodGainNode);
+
+    // Connect gain nodes to the offline context destination
+    NewAudioGainNode.connect(NewContext.destination);
+    NewMoodGainNode.connect(NewContext.destination);
+
+    // Start offline sources for rendering
+    NewAudioSource.start();
+    NewMoodSource.start();
+
+          const mixededAudioBuffer = await NewContext.startRendering();
+          // Use previous mixing logic for shorter or equal length
+          const mixedAudioBlob = await bufferToWave(mixededAudioBuffer);
+          const mixedAudioUrl = URL.createObjectURL(mixedAudioBlob);
+
+          audioPreview.src = mixedAudioUrl;
+          audioPreview.pause(); // Explicitly pause the audio to ensure it doesn't play automatically
+          audioPreview.currentTime = 0;
+          loadingIndicator.style.display = "none"; // Hide loading indicator
+          mediaPreview.style.display = "block"; // Show the audio preview
+        }
+
+      } catch (error) {
+        console.error("Error mixing audio:", error);
+        alert("Error mixing audio. Please try again.");
+      }
+    } else {
+      // Hide media preview if no mood is selected
+      mediaPreview.style.display = "none";
+      audioPreview.src = "";
+    }
+  });
+
+  async function loopAudio(moodBuffer, targetDuration) {
+    const loopedBuffer = audioContext.createBuffer(
+      moodBuffer.numberOfChannels,
+      moodBuffer.length * Math.ceil(targetDuration / moodBuffer.duration),
+      moodBuffer.sampleRate
+    );
+
+    for (let i = 0; i < loopedBuffer.numberOfChannels; i++) {
+      const channelData = loopedBuffer.getChannelData(i);
+      for (let j = 0; j < channelData.length; j++) {
+        channelData[j] = moodBuffer.getChannelData(i)[j % moodBuffer.length];
+      }
+    }
+    return loopedBuffer;
+  }
+
+  // Convert AudioBuffer to a WAV blob for playback
+  function bufferToWave(buffer) {
+    const waveHeader = new ArrayBuffer(44);
+    const view = new DataView(waveHeader);
+    let offset = 0;
+    
+    const numChannels = buffer.numberOfChannels;
+    const sampleRate = buffer.sampleRate;
+    const numFrames = buffer.length;
+    const bitsPerSample = 16;
+
+    const byteRate = sampleRate * numChannels * bitsPerSample / 8;
+    const blockAlign = numChannels * bitsPerSample / 8;
+    const dataSize = numFrames * numChannels * bitsPerSample / 8;
+
+    // RIFF header
+    writeString(view, offset, 'RIFF');
+    offset += 4;
+    view.setUint32(offset, 36 + dataSize, true);
+    offset += 4;
+    writeString(view, offset, 'WAVE');
+    offset += 4;
+
+    // fmt chunk
+    writeString(view, offset, 'fmt ');
+    offset += 4;
+    view.setUint32(offset, 16, true);
+    offset += 4;
+    view.setUint16(offset, 1, true); // PCM format
+    offset += 2;
+    view.setUint16(offset, numChannels, true);
+    offset += 2;
+    view.setUint32(offset, sampleRate, true);
+    offset += 4;
+    view.setUint32(offset, byteRate, true);
+    offset += 4;
+    view.setUint16(offset, blockAlign, true);
+    offset += 2;
+    view.setUint16(offset, bitsPerSample, true);
+    offset += 2;
+
+    // data chunk
+    writeString(view, offset, 'data');
+    offset += 4;
+    view.setUint32(offset, dataSize, true);
+    offset += 4;
+
+    // Write the audio data
+    const bufferData = buffer.getChannelData(0);
+    const audioData = new Int16Array(numFrames * numChannels);
+    for (let i = 0; i < numFrames; i++) {
+      audioData[i * 2] = bufferData[i] * 0x7FFF; // Left channel
+      audioData[i * 2 + 1] = bufferData[i] * 0x7FFF; // Right channel
+    } 
+    // Write the data to the array buffer
+    const audioBuffer = new ArrayBuffer(dataSize);
+    const audioView = new DataView(audioBuffer);
+    for (let i = 0; i < audioData.length; i++) {
+      audioView.setInt16(i * 2, audioData[i], true);
+    }
+
+    const mixedBlob = new Blob([waveHeader, audioBuffer], { type: 'audio/wav' });
+    return mixedBlob;
+  }
+
+  // Helper function to write strings into a DataView
+  function writeString(view, offset, string) {
+    for (let i = 0; i < string.length; i++) {
+      view.setUint8(offset + i, string.charCodeAt(i));
+    }
+  }
+
+  // Ensure the audio plays when the play button is clicked
+  audioPreview.addEventListener('play', () => {
+    console.log('Audio is playing');
+    // You can add any logic you want to execute when the audio starts playing
+  });
+
+  // Ensure the audio pauses when the pause button is clicked
+  audioPreview.addEventListener('pause', () => {
+    console.log('Audio is paused');
+    // You can add any logic you want to execute when the audio is paused
+  });
+
+
+});
+
+
+
+
+
+
+document.getElementById('uploadButton').addEventListener('click', async () => {
+  const uploadedBy = document.getElementById('uploadedBy').value;
+  const message = document.getElementById('message').value;
+  const username = document.getElementById('username').textContent;
+  const mood = document.getElementById('mood').value;
+  const audioUrl = new URLSearchParams(window.location.search).get("audioUrl");
+  const filename = audioUrl.split('/').pop(); 
+
+  if (!uploadedBy || !message || !audioUrl || !username || !mood) {
+    alert("Please fill in all fields and select a file to upload.");
+    return;
+  }
+
+  const formData = new FormData();
+
+  // Show the loading spinner
+  const uploadSpinner = document.getElementById("uploadSpinner");
+  uploadSpinner.style.display = "inline-block"; // Show spinner
+
+  try {
+    // Fetch the file content from the audioUrl
+    const response = await fetch(audioUrl);
+    const blob = await response.blob(); // Convert response to Blob
+    formData.append('file', blob, filename); // Append Blob with original filename
+
+    formData.append('uploadedBy', uploadedBy);
+    formData.append('message', message);
+    formData.append('username', username);
+    formData.append('mood', mood);
+
+    const res = await fetch('/upload', {
+      method: 'POST',
+      body: formData,
+    });
+
+    if (!res.ok) {
+      throw new Error("Failed to upload the file.");
+    }
+
+    const data = await res.json();
+    console.log("File uploaded successfully:", data);
+    console.log("QR Code URL:", data.qrCodeUrl);
+
+    if (data.qrCodeUrl) {
+      uploadSpinner.style.display = "none";
+      // Append QR Code to the page
+      const qrCanvas = document.getElementById("qrCanvas");
+      qrCanvas.innerHTML = `<img src="${data.qrCodeUrl}" alt="QR Code" style="width: 200px; height: 200px;" />`;
+      qrCanvas.style.display = "block";
+      // Show done Button
+      const DoneButton = document.getElementById('doneButton');
+      DoneButton.style.display = "block";
+      const downloadButton = document.getElementById('downloadButton');
+  downloadButton.style.display = "block";
+
+      // Redirect to the image page on button click
+      DoneButton.addEventListener('click', () => {
+        window.location.href = `/record`; // Redirect to /imagepage
+      });
+
+      document.getElementById('downloadButton').addEventListener('click', () => {
+     const qrImage = downloadFromFirebase(data.qrCodeUrl);
+  
+  if (qrImage) {
+    const link = document.createElement('a');
+    link.href = qrImage.src; // Set the image source as the download link
+    link.download = 'qr_code.png'; // Set the file name for download
+    link.click(); // Trigger the download
+  } else {
+  }
+});
+
+      document.getElementById('uploadedBy').value = '';
+      document.getElementById('message').value = '';
+      document.getElementById('mood').value = '';
+    } else {
+      alert("QR Code URL not available.");
+    }
+  } catch (error) {
+    console.error("Error uploading file:", error);
+    alert("Error uploading file. Please try again.");
+  }
+});
+
+
+function downloadFromFirebase(url) {
+  if (!url) {
+    alert('Invalid download URL.');
+    return;
+  }
+
+  const filename = url.substring(url.lastIndexOf("/") + 1).split("?")[0]; // Extract filename
+  const xhr = new XMLHttpRequest();
+  xhr.responseType = 'blob'; // Set response type to blob
+
+  xhr.onload = function () {
+    // Create a temporary link element for downloading the file
+    const a = document.createElement('a');
+    a.href = window.URL.createObjectURL(xhr.response);
+    a.download = filename; // Use the extracted filename
+    a.style.display = 'none';
+    document.body.appendChild(a);
+    a.click(); // Trigger the download
+    document.body.removeChild(a); // Remove the link after download
+  };
+
+  xhr.onerror = function () {
+    alert('Failed to download the file. Please try again.');
+  };
+
+  xhr.open('GET', url);
+  xhr.send();
+}
+
+    </script>
+
+    <script 
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js" 
+      integrity="sha384-pprn3073KE6tl6bjs2QrFaJGz5/SUsLqktiwsUTF55Jfv3qYSDhgCecCxMW52nD2" 
+      crossorigin="anonymous"
+    ></script>
+  </body>
+</html>
