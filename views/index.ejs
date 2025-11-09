@@ -143,9 +143,9 @@ document.addEventListener("DOMContentLoaded", () => {
   const usernameEl = document.getElementById("username");
   const username = usernameEl ? usernameEl.textContent.trim() : "";
   if (username && username.toLowerCase() !== "guest") {
-    localStorage.setItem("username", username);
+    sessionStorage.setItem("username", username);
   }
-  const storedName = localStorage.getItem("username");
+  const storedName = sessionStorage.getItem("username");
   if (storedName && (!username || username.toLowerCase() === "guest")) {
     if (usernameEl) usernameEl.textContent = storedName;
   }
@@ -158,7 +158,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function clearUserStorage() {
     try {
-      localStorage.removeItem("username");
+      sessionStorage.removeItem("username");
       sessionStorage.removeItem("username");
       // optionally clear all: localStorage.clear();
       // console.log("Storage cleared");
