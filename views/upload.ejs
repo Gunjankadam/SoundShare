@@ -234,15 +234,16 @@
     const selectedMood = event.target.value;
     let moodAudioUrl = ` `;
 
-        const oneUrl = `https://firebasestorage.googleapis.com/v0/b/alumini8-3fd16.appspot.com/o/my-storage%2FMain%20agar%20kahoon.mp3?alt=media&token=7b5fff8d-8cca-4702-8c14-d62d85c1c25b`;
-        const twoUrl = `https://firebasestorage.googleapis.com/v0/b/alumini8-3fd16.appspot.com/o/my-storage%2FTera%20yaar%20hoon%20mai.mp3?alt=media&token=be61d93b-14f4-4d51-a909-101cfa2b5a20`;
-        const threeUrl = `https://firebasestorage.googleapis.com/v0/b/alumini8-3fd16.appspot.com/o/my-storage%2FTere%20jaisa%20yaar%20kaha.mp3?alt=media&token=f6f745fb-b40a-4f19-8ba2-487fd5d28f80`;
-        const fourUrl =`https://firebasestorage.googleapis.com/v0/b/alumini8-3fd16.appspot.com/o/my-storage%2FTu%20hai%20toh.mp3?alt=media&token=658a6e88-d3fc-403e-9672-fb967c3a1fed`;
-        const fiveUrl=`https://firebasestorage.googleapis.com/v0/b/alumini8-3fd16.appspot.com/o/my-storage%2FTu%20hi%20yaar%20mera.mp3?alt=media&token=a51ae28b-6462-4f01-bf9d-1e8069ceec05`;
-        const sixUrl=`https://firebasestorage.googleapis.com/v0/b/alumini8-3fd16.appspot.com/o/my-storage%2Fold%20song%20mashup.mp3?alt=media&token=f751cf76-11af-4cf7-a587-8fa987da5834`;
-        const sevenUrl=`https://firebasestorage.googleapis.com/v0/b/alumini8-3fd16.appspot.com/o/my-storage%2Fthousand%20years.mp3?alt=media&token=614aed54-0b1f-49ee-b9b9-0744dd18bc37`;
-        const eightUrl=`https://firebasestorage.googleapis.com/v0/b/alumini8-3fd16.appspot.com/o/my-storage%2Ftumse%20mil%20ke.mp3?alt=media&token=c6f6389c-4c8a-42a8-8b3c-3f5bddf03e90`;
-        const nineUrl=`https://firebasestorage.googleapis.com/v0/b/alumini8-3fd16.appspot.com/o/my-storage%2Fzara%20zara.mp3?alt=media&token=5f312d51-48bb-437a-8938-e4718f44c404`;
+        const oneUrl = `https://wbblviqosrvinorxqnwk.supabase.co/storage/v1/object/public/recordings/Main%20agar%20kahoon.mp3`;
+const twoUrl = `https://wbblviqosrvinorxqnwk.supabase.co/storage/v1/object/public/recordings/Tera%20yaar%20hoon%20mai.mp3`;
+const threeUrl = `https://wbblviqosrvinorxqnwk.supabase.co/storage/v1/object/public/recordings/Tere%20jaisa%20yaar%20kaha.mp3`;
+const fourUrl = `https://wbblviqosrvinorxqnwk.supabase.co/storage/v1/object/public/recordings/Tu%20hai%20toh.mp3`;
+const fiveUrl = `https://wbblviqosrvinorxqnwk.supabase.co/storage/v1/object/public/recordings/Tu%20hi%20yaar%20mera.mp3`;
+const sixUrl = `https://wbblviqosrvinorxqnwk.supabase.co/storage/v1/object/public/recordings/Old%20song%20mashup.mp3`;
+const sevenUrl = `https://wbblviqosrvinorxqnwk.supabase.co/storage/v1/object/public/recordings/Thousand%20years.mp3`;
+const eightUrl = `https://wbblviqosrvinorxqnwk.supabase.co/storage/v1/object/public/recordings/tumse%20mil%20ke.mp3`;
+const nineUrl = `https://wbblviqosrvinorxqnwk.supabase.co/storage/v1/object/public/recordings/zara%20zara.mp3`;
+
         let hiddenAudioUrl;
         // Determine the hidden audio URL based on mood
         if(selectedMood === "A"){
