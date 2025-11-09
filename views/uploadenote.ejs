@@ -184,11 +184,9 @@ async function deleteMedia(id) {
       const res = await fetch(`/upload/${id}`, { method: 'DELETE' });
       const data = await res.json();
 
-      alert(data.message);
       if (res.ok) location.reload(); // refresh the page to update the list
     } catch (err) {
       console.error('Error deleting media:', err);
-      alert('Failed to delete. Please try again.');
     }
   }
 }
