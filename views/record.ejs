@@ -280,17 +280,20 @@
 
 
     <script>
-      const audioNameInput = document.getElementById("audio-name");
-      audioNameInput.value = '';
+      
 
-  // Show username from sessionStorage
-  const usernameElement = document.getElementById("username");
+document.addEventListener('DOMContentLoaded', () => {
+const audioNameInput = document.getElementById("audio-name");
+audioNameInput.value = '';
+  const name = "<%= name %>"; // Server-rendered value
+  if (name && name !== "guest") {
+    sessionStorage.setItem("username", name);
+  }
+
   const storedName = sessionStorage.getItem("username");
-
-  if (storedName && usernameElement) {
+  if (storedName) {
+    const usernameElement = document.getElementById("username");
     usernameElement.textContent = storedName;
-  } else if (usernameElement) {
-    usernameElement.textContent = "Guest";
   }
   
 
