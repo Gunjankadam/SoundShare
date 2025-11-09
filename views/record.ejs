@@ -280,21 +280,19 @@
 
 
     <script>
-      document.addEventListener('DOMContentLoaded', () => {
-        const audioNameInput = document.getElementById("audio-name");
-        audioNameInput.value = '';
+      const audioNameInput = document.getElementById("audio-name");
+      audioNameInput.value = '';
 
+  // Show username from sessionStorage
+  const usernameElement = document.getElementById("username");
+  const storedName = sessionStorage.getItem("username");
 
-// Display stored username 
-const storedName = sessionStorage.getItem("username"); 
-if (storedName) {
-      document.getElementById("username").textContent = storedName;
-    } else {
-      document.getElementById("username").textContent = "Guest";
-    }
-  });
-
- 
+  if (storedName && usernameElement) {
+    usernameElement.textContent = storedName;
+  } else if (usernameElement) {
+    usernameElement.textContent = "Guest";
+  }
+  
 
   const startButton = document.getElementById("start-recording");
   const pauseButton = document.getElementById("pause-recording");
