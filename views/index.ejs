@@ -138,6 +138,29 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js"></script>
 
     <script>
+  document.addEventListener("DOMContentLoaded", () => {
+    // Get username from EJS-rendered value
+    const username = document.getElementById("username").textContent.trim();
+
+    // Store in browser storage
+    if (username && username.toLowerCase() !== "guest") {
+      localStorage.setItem("username", username);
+    }
+
+    // If username is missing (e.g., after reload), load it from storage
+    const storedName = localStorage.getItem("username");
+    if (storedName && (!username || username === "Guest")) {
+      document.getElementById("username").textContent = storedName;
+    }
+  });
+
+  // Clear localStorage on logout
+  const logoutForm = document.querySelector(".logout-button form");
+  if (logoutForm) {
+    logoutForm.addEventListener("submit", () => {
+      localStorage.removeItem("username");
+    });
+  }
       function redirectToUpload() {
         const name = document.getElementById('username').textContent;
         const form = document.createElement('form');
