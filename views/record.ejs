@@ -271,6 +271,7 @@
                 </div>
               </div>
             </button>
+           <button id="go-home" class="btn btn-dark w-100 mt-3">Back to Home</button>
           </div>
         </div>
       </div>
@@ -292,8 +293,13 @@
       // 👇 fallback if nothing found
       document.getElementById("username").textContent = "Guest";
     }
-  });
 
+// Go back to home (index.ejs)
+document.getElementById("go-home").addEventListener("click", () => {
+  window.location.href = "/"; // redirect to index.ejs route
+});
+  });
+ 
 
   // Display stored username
   const storedName = sessionStorage.getItem("username");
