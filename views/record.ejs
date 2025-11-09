@@ -284,16 +284,14 @@
       document.addEventListener('DOMContentLoaded', () => {
         const audioNameInput = document.getElementById("audio-name");
         audioNameInput.value = '';
-    const storedName = localStorage.getItem("username");
-
-    if (storedName) {
-      // 👇 put the username text inside the span
-      document.getElementById("username").textContent = storedName;
-    } else {
-      // 👇 fallback if nothing found
-      document.getElementById("username").textContent = "Guest";
-    }
   });
+
+// Display stored username 
+const storedName = localStorage.getItem("username"); 
+if (storedName) { 
+const usernameElement = document.getElementById("username"); 
+if (usernameElement) usernameElement.textContent = storedName; 
+}
  
 
   const startButton = document.getElementById("start-recording");
@@ -580,7 +578,7 @@ const uploadFileToFirebase = async (file) => {
 
 // Go back to home (index.ejs)
 document.getElementById("go-home").addEventListener("click", () => {
-  window.location.href = "/"; // redirect to index.ejs route
+  window.location.href = "/home"; // redirect to index.ejs route
 });
 
     </script>
