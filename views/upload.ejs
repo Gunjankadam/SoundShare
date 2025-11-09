@@ -648,16 +648,6 @@ function downloadFromFirebase(url) {
   xhr.send();
 }
 
-  document.addEventListener('DOMContentLoaded', () => {
-    // ✅ Retrieve username directly from localStorage
-    const storedName = localStorage.getItem("username");
-
-    if (storedName) {
-      document.getElementById("username").textContent = storedName;
-    } else {
-      document.getElementById("username").textContent = "Guest";
-    }
-  });
     </script>
 
     <script 
