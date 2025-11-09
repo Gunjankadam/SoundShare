@@ -202,7 +202,7 @@
   </head>
   <body class="d-flex h-100 text-center text-white bg-white">
   <div class="container d-flex w-100 h-100 p-3 mx-auto flex-column center-content">
-  <div class="username">𝑯𝒆𝒍𝒍𝒐 <span id="username"></span></div>
+  <div class="username">Hello, <span id="username"></span></div>
   <div class="form-container">
     <h1>𝘼𝙪𝙙𝙞𝙤 𝙂𝙚𝙣𝙚𝙧𝙖𝙩𝙞𝙤𝙣</h1>
 
@@ -288,10 +288,13 @@
 
 // Display stored username 
 const storedName = localStorage.getItem("username"); 
-if (storedName) { 
-const usernameElement = document.getElementById("username"); 
-if (usernameElement) usernameElement.textContent = storedName; 
-}
+if (storedName) {
+      document.getElementById("username").textContent = storedName;
+    } else {
+      document.getElementById("username").textContent = "Guest";
+    }
+  });
+
  
 
   const startButton = document.getElementById("start-recording");
