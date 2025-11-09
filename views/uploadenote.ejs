@@ -95,7 +95,7 @@
   </style>
 </head>
 <body>
-  <div class="username">Hello, <span id="username"><%= name %></span></div>
+  <div class="username">Hello, <span id="username"></span></div>
 
   <div class="main-wrapper">
     <div class="form-container">
@@ -144,17 +144,16 @@
   </div>
 
   <script>
-    document.addEventListener('DOMContentLoaded', () => {
-      const name = "<%= name %>";
-      if (name && name !== "guest") {
-        sessionStorage.setItem("username", name);
-      }
+  document.addEventListener('DOMContentLoaded', () => {
+    // ✅ Retrieve username directly from localStorage
+    const storedName = localStorage.getItem("username");
 
-      const storedName = sessionStorage.getItem("username");
-      if (storedName) {
-        document.getElementById("username").textContent = storedName;
-      }
-    });
+    if (storedName) {
+      document.getElementById("username").textContent = storedName;
+    } else {
+      document.getElementById("username").textContent = "Guest";
+    }
+  });
 
     function downloadFromFirebase(url) {
       if (!url) return alert('Invalid download URL.');
