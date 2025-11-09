@@ -741,8 +741,34 @@ const NotesPage = async (req, res) => {
     }
 };
 
+//@desc Delete a media entry
+//@route DELETE /upload/:id
+//@access private
+const deleteMedia = async (req, res) => {
+  try {
+    const mediaId = req.params.id;
+
+    // Find and delete the entry (only if it belongs to the logged-in user)
+    const deleted = await Media.findOneAndDelete({
+      _id: mediaId,
+      username: req.user.username
+    });
+
+    if (!deleted) {
+      return res.status(404).json({ message: "Media not found or not authorized" });
+    }
+
+    res.json({ message: "Media deleted successfully" });
+  } catch (error) {
+    console.error("Error deleting media:", error);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+};
+
+
 module.exports = {
     registerUser,
+    deleteMedia,
     loginUser,
     homePage,
     registerPage,
