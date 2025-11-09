@@ -33,6 +33,7 @@ const {
     otpPage,
     sendForgetOtp,
     verifyForgetOtp,
+    deleteMedia,
     resetPassword
 } = require("../controllers/userController")
 
@@ -49,6 +50,7 @@ router.get("/record",RecordPage);
 router.get("/forgot-password", (req, res) => {
     res.render("forgot-password.ejs", { title: "Forgot Password" });
 });
+router.delete('/upload/:id', deleteMedia);
 router.post('/forgot-password', sendForgetOtp);
 router.post('/verify-forgot-otp', verifyForgetOtp);
 router.post('/reset-password', resetPassword);
