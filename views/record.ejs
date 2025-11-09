@@ -202,7 +202,7 @@
   </head>
   <body class="d-flex h-100 text-center text-white bg-white">
   <div class="container d-flex w-100 h-100 p-3 mx-auto flex-column center-content">
-  <div class="username">𝑯𝒆𝒍𝒍𝒐 <span id="username"><%= name %></span></div>
+  <div class="username">𝑯𝒆𝒍𝒍𝒐 <span id="username"></span></div>
   <div class="form-container">
     <h1>𝘼𝙪𝙙𝙞𝙤 𝙂𝙚𝙣𝙚𝙧𝙖𝙩𝙞𝙤𝙣</h1>
 
@@ -237,7 +237,7 @@
                   </div>
                 </div>
               </button>
-              <button id="re-record" class="btn btn-secondary w-100 mt-2">Record Again</button>
+              <button id="re-record" class="btn btn-dark w-100 mt-2">Record Again</button>
             </div>
           </div>
         </div>
@@ -263,7 +263,7 @@
               
             </div>
 
-            <button id="upload-audio-button" class="btn btn-secondary position-relative w-100">
+            <button id="upload-audio-button" class="btn btn-dark position-relative w-100">
               Upload
               <div id="uuploadSpinner" class="position-absolute top-50 start-50 translate-middle" style="display: none;">
                 <div class="spinner-border text-light" role="status">
@@ -283,13 +283,17 @@
       document.addEventListener('DOMContentLoaded', () => {
         const audioNameInput = document.getElementById("audio-name");
         audioNameInput.value = '';
-  // Logic for setting and displaying the username
-   const name = "<%= name %>";
+    const storedName = localStorage.getItem("username");
 
-  // Store username in sessionStorage if it's valid
-  if (name && name.toLowerCase() !== "guest") {
-    sessionStorage.setItem("username", name);
-  }
+    if (storedName) {
+      // 👇 put the username text inside the span
+      document.getElementById("username").textContent = storedName;
+    } else {
+      // 👇 fallback if nothing found
+      document.getElementById("username").textContent = "Guest";
+    }
+  });
+
 
   // Display stored username
   const storedName = sessionStorage.getItem("username");
